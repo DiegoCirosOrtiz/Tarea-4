@@ -1,0 +1,42 @@
+import numpy as np
+
+world_points = np.array([
+    [0,0,0],
+    [7,0,0],
+    [0,7,0],
+    [0,0,7],
+    [0,7,7],
+    [7,0,7],
+    [7,7,7]
+])
+
+image_points = np.array([
+    [100,300],
+    [160,300],
+    [150,250],
+    [110,200],
+    [120,180],
+    [170,210],
+    [200,190]
+])
+
+M = []
+B = []
+
+for i in range(len(world_points)):
+    x, y, z = world_points[i]
+    u, v = image_points[i]
+
+    M.append([x,y,z,1,0,0,0,0,-u*x,-u*y,-u*z])
+    M.append([0,0,0,0,x,y,z,1,-v*x,-v*y,-v*z])
+
+    B.append(u)
+    B.append(v)
+
+M = np.array(M)
+B = np.array(B)
+
+L, _, _, _ = np.linalg.lstsq(M, B, rcond=None)
+
+print("Parámetros DLT:")
+print(L)
